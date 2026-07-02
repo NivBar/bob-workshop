@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understand Before You Change — IBM Bob Workshop</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue: #0f62fe;
+  --blue-dark: #0043ce;
+  --blue-light: #d0e2ff;
+  --g10: #f4f4f4;
+  --g20: #e0e0e0;
+  --g50: #8d8d8d;
+  --g70: #525252;
+  --g90: #262626;
+  --g100: #161616;
+  --green: #24a148;
+  --red: #da1e28;
+  --orange: #ff832b;
+  --teal: #009d9a;
+  --purple: #8a3ffc;
+}
+body {
+  font-family: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif;
+  background: #fff;
+  color: var(--g100);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* HERO */
+.hero {
+  background: var(--g100);
+  color: #fff;
+  padding: 72px 32px 64px;
+  text-align: center;
+  border-bottom: 4px solid var(--blue);
+}
+.hero-eyebrow {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--blue-light);
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 300;
+  line-height: 1.15;
+  color: #fff;
+  max-width: 700px;
+  margin: 0 auto 20px;
+}
+.hero h1 strong { font-weight: 600; color: #78a9ff; }
+.hero-sub {
+  font-size: 18px;
+  color: #a8b2bd;
+  max-width: 540px;
+  margin: 0 auto 32px;
+  font-weight: 300;
+}
+.hero-note {
+  display: inline-block;
+  border: 1px solid #525252;
+  color: #a8b2bd;
+  font-size: 12px;
+  padding: 8px 20px;
+  letter-spacing: 1px;
+}
+
+/* LAYOUT */
+.page { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* SECTION */
+.ws-section {
+  padding: 64px 0 0;
+}
+
+/* STEP HEADER */
+.step-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--g20);
+}
+.step-num {
+  background: var(--blue);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 300;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.step-header-text h2 {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--g100);
+  margin-bottom: 6px;
+}
+.step-header-text h2 strong { font-weight: 600; }
+.step-header-text p { color: var(--g70); font-size: 15px; }
+
+/* SECTION TITLE */
+.section-title {
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--g100);
+  margin-bottom: 12px;
+}
+.section-title strong { font-weight: 600; }
+.section-lead { color: var(--g70); font-size: 16px; max-width: 640px; margin-bottom: 36px; }
+
+/* WHY BOX */
+.why {
+  background: var(--g10);
+  border-left: 4px solid var(--blue);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  color: var(--g90);
+  font-size: 15px;
+}
+
+/* PROMPT */
+.prompt-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 600;
+  color: var(--teal);
+  margin-bottom: 8px;
+}
+.prompt-box {
+  background: var(--g100);
+  border-left: 4px solid var(--teal);
+  padding: 24px 28px;
+  color: #a7f0ba;
+  font-size: 13.5px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  margin-bottom: 24px;
+}
+
+/* INFO GRID */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+@media (max-width: 580px) { .info-grid { grid-template-columns: 1fr; } }
+.info-box {
+  border: 1px solid var(--g20);
+  padding: 20px 22px;
+  background: #fff;
+}
+.info-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.info-box.expect .info-title { color: var(--orange); }
+.info-box.good .info-title { color: var(--green); }
+.info-box ul { padding-left: 18px; color: var(--g70); font-size: 14px; }
+.info-box li { margin-bottom: 6px; }
+
+/* REFLECTION */
+.reflection {
+  background: #edf5ff;
+  border-left: 4px solid #4589ff;
+  padding: 18px 24px;
+  margin: 24px 0;
+  color: #0043ce;
+  font-style: italic;
+  font-size: 14.5px;
+}
+
+/* TABLE */
+table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+th {
+  background: var(--blue);
+  color: #fff;
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+td { padding: 12px 16px; border-bottom: 1px solid var(--g20); color: var(--g70); vertical-align: top; }
+tr:nth-child(even) td { background: var(--g10); }
+td:first-child { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--g100); font-weight: 500; }
+
+/* TAGS */
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.tag {
+  font-size: 11px;
+  padding: 4px 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+  border: 1px solid;
+}
+.tag-red { color: var(--red); border-color: var(--red); background: #fff1f1; }
+.tag-orange { color: #b45309; border-color: var(--orange); background: #fff7ed; }
+.tag-green { color: var(--green); border-color: var(--green); background: #f0fff4; }
+
+/* JOURNEY */
+.journey { margin: 32px 0; }
+.journey-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+.journey-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 52px;
+  flex-shrink: 0;
+}
+.jdot {
+  width: 40px; height: 40px;
+  border: 2px solid var(--blue);
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--blue);
+  flex-shrink: 0;
+}
+.jline { flex: 1; width: 2px; background: var(--g20); margin: 0 auto; min-height: 16px; }
+.journey-row:last-child .jline { display: none; }
+.jcontent { padding: 6px 0 28px 20px; flex: 1; }
+.jcontent h4 { font-size: 16px; font-weight: 600; color: var(--g100); margin-bottom: 2px; }
+.jcontent p { color: var(--g70); font-size: 13.5px; }
+
+/* PRINCIPLE */
+.principle {
+  background: var(--blue);
+  padding: 48px 40px;
+  text-align: center;
+  margin: 48px 0 32px;
+}
+.principle p {
+  font-size: clamp(20px, 3.5vw, 30px);
+  font-weight: 300;
+  color: #fff;
+  line-height: 1.4;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.principle strong { font-weight: 600; }
+
+/* NEXT STEP CARDS */
+.next-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+@media (max-width: 580px) { .next-grid { grid-template-columns: 1fr; } }
+.next-card {
+  border: 1px solid var(--g20);
+  padding: 22px 24px;
+}
+.next-card .nc-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: var(--blue);
+  margin-bottom: 8px;
+}
+.next-card p { color: var(--g70); font-size: 14.5px; }
+
+/* CHECKLIST */
+.setup-list { list-style: none; padding: 0; margin: 24px 0; }
+.setup-list li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border: 1px solid var(--g20);
+  margin-bottom: 8px;
+  background: var(--g10);
+}
+.setup-list li::before {
+  content: '☐';
+  font-size: 18px;
+  color: var(--blue);
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+.setup-list li span { color: var(--g70); font-size: 14.5px; }
+.setup-list li strong { color: var(--g100); }
+
+code {
+  background: var(--g10);
+  border: 1px solid var(--g20);
+  padding: 1px 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--g100);
+}
+
+hr { border: none; border-top: 1px solid var(--g20); margin: 40px 0; }
+
+/* DIVIDER LABEL */
+.divider-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 48px 0 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: var(--g50);
+}
+.divider-label::after { content: ''; flex: 1; height: 1px; background: var(--g20); }
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 32px 24px;
+  border-top: 1px solid var(--g20);
+  color: var(--g50);
+  font-size: 12px;
+  margin-top: 64px;
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">IBM Bob · Hands-On Workshop</div>
+  <h1>Understand <strong>Before</strong> You Change</h1>
+  <p class="hero-sub">Use IBM Bob to analyse a real software project — step by step — before touching a single line of code.</p>
+  <div class="hero-note">No developer experience required &nbsp;·&nbsp; Every output is in plain English</div>
+</div>
+
+<div class="page">
+
+  <!-- OVERVIEW -->
+  <div class="ws-section">
+    <div class="section-title">What this workshop <strong>is about</strong></div>
+    <p class="section-lead">Before any system is changed, improved, or extended — someone needs to truly understand it. Most organisations skip this. Teams make changes to systems they only partially understand. Things break. Audits fail. Costs spiral.</p>
+
+    <div class="why">
+      This workshop shows a different approach — using IBM Bob to read, analyse, and document a real software project <strong>before touching a single line of code</strong>. Every step produces a real document. By the end, you will have the same documentation package that a professional team would spend weeks producing — created directly from the code.
+    </div>
+
+    <p style="color:var(--g70);margin-bottom:24px">We use the <strong>OpenMRS Appointment Scheduling Module</strong> — a real, open-source healthcare project — as our practice system.<br>Repository: <a href="https://github.com/openmrs/openmrs-module-appointmentscheduling" style="color:var(--blue)">github.com/openmrs/openmrs-module-appointmentscheduling</a></p>
+
+    <table>
+      <thead><tr><th>Document you will produce</th><th>What it is</th></tr></thead>
+      <tbody>
+        <tr><td>01-EXECUTIVE-BRIEFING.md</td><td>Plain-English overview of the system</td></tr>
+        <tr><td>02-ARCHITECTURE-MAP.md</td><td>Structural diagram of how the system is built</td></tr>
+        <tr><td>03-RISK-ASSESSMENT.md</td><td>Prioritised list of technical risks and gaps</td></tr>
+        <tr><td>04-DESIGN-DECISIONS.md</td><td>Records of why the system was built the way it was</td></tr>
+        <tr><td>05-SECURITY-REVIEW.md</td><td>Security findings with severity ratings</td></tr>
+        <tr><td>06-FEATURE-PLAN-WAITLIST.md</td><td>Grounded implementation plan for a new feature</td></tr>
+      </tbody>
+    </table>
+
+    <div class="divider-label">The journey</div>
+    <div class="journey">
+      <div class="journey-row"><div class="journey-left"><div class="jdot">0</div><div class="jline"></div></div><div class="jcontent"><h4>Clone the Repository</h4><p>Download the project onto your machine so Bob can read it</p></div></div>
+      <div class="journey-row"><div class="journey-left"><div class="jdot">1</div><div class="jline"></div></div><div class="jcontent"><h4>Understand the System</h4><p>Executive briefing in plain English — what is this, who uses it, why does it exist</p></div></div>
+      <div class="journey-row"><div class="journey-left"><div class="jdot">2</div><div class="jline"></div></div><div class="jcontent"><h4>Map the Structure</h4><p>Architecture layers and how the components connect</p></div></div>
+      <div class="journey-row"><div class="journey-left"><div class="jdot">3</div><div class="jline"></div></div><div class="jcontent"><h4>Find the Risks</h4><p>Technical debt, outdated technology, unfinished work</p></div></div>
+      <div class="journey-row"><div class="journey-left"><div class="jdot">4</div><div class="jline"></div></div><div class="jcontent"><h4>Document Design Decisions</h4><p>Why the system was built the way it was — before someone forgets</p></div></div>
+      <div class="journey-row"><div class="journey-left"><div class="jdot">5</div><div class="jline"></div></div><div class="jcontent"><h4>Assess Security</h4><p>Structured security and performance review</p></div></div>
+      <div class="journey-row"><div class="journey-left"><div class="jdot">6</div><div class="jline"></div></div><div class="jcontent"><h4>Plan the First Safe Change</h4><p>A feature plan grounded in the actual code — not guesswork</p></div></div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- SETUP -->
+  <div class="ws-section">
+    <div class="step-header">
+      <div class="step-num">0</div>
+      <div class="step-header-text">
+        <h2>Clone the <strong>Repository</strong></h2>
+        <p>Download the project so Bob can read and analyse it locally</p>
+      </div>
+    </div>
+
+    <div class="why">Bob works with code that is on your computer — it reads the actual files. Before Bob can analyse anything, the project needs to exist locally. "Cloning" is simply downloading a full copy of the project from GitHub.</div>
+
+    <p style="color:var(--g70);margin-bottom:16px;font-weight:600">Before you start, confirm you have:</p>
+    <ul class="setup-list">
+      <li><span><strong>Bob</strong> is installed and you are signed in with your IBMid<br><small>Don't have Bob? Download at <a href="https://bob.ibm.com/download" style="color:var(--blue)">bob.ibm.com/download</a></small></span></li>
+      <li><span><strong>Git</strong> is installed — open a terminal and run <code>git --version</code> to confirm</span></li>
+      <li><span><strong>A stable internet connection</strong> — the repository is ~50 MB</span></li>
+    </ul>
+
+    <div class="divider-label">Option A — Terminal</div>
+    <div class="prompt-label">Run this command</div>
+    <div class="prompt-box">git clone https://github.com/openmrs/openmrs-module-appointmentscheduling.git</div>
+
+    <div class="divider-label">Option B — GitHub Desktop</div>
+    <ol style="color:var(--g70);padding-left:22px;line-height:2.2;margin-bottom:24px">
+      <li>Open GitHub Desktop</li>
+      <li>Click <strong style="color:var(--g100)">File → Clone repository</strong></li>
+      <li>Click the <strong style="color:var(--g100)">URL</strong> tab and paste the repository URL</li>
+      <li>Choose where to save it, then click <strong style="color:var(--g100)">Clone</strong></li>
+    </ol>
+
+    <div class="divider-label">Then open in Bob</div>
+    <ol style="color:var(--g70);padding-left:22px;line-height:2.2;margin-bottom:28px">
+      <li>Open Bob → <strong style="color:var(--g100)">File → Open Folder</strong></li>
+      <li>Navigate to the cloned folder and click <strong style="color:var(--g100)">Open</strong></li>
+      <li>Wait 20–30 seconds for Bob to index the files</li>
+    </ol>
+
+    <div class="prompt-label">Verification — paste into Bob to confirm files are loaded</div>
+    <div class="prompt-box">How many Java files are in this project?</div>
+    <p style="color:var(--g70);font-size:13.5px">If Bob gives you a specific number, the files are loaded and you are ready to continue.</p>
+  </div>
+
+  <hr>
+
+  <!-- STEP 1 -->
+  <div class="ws-section">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div class="step-header-text">
+        <h2>Understand <strong>the System</strong></h2>
+        <p>Ask Bob to read the entire project and explain it in plain English</p>
+      </div>
+    </div>
+
+    <div class="why">Most organisations have systems that only one or two people truly understand. When those people leave, the knowledge walks out with them. Bob reverse-engineers that knowledge from the code itself — in under a minute.</div>
+
+    <div class="prompt-label">📋 Prompt 1 — The Executive Briefing</div>
+    <div class="prompt-box">I have just been given responsibility for this codebase and I know nothing about it.
+Read the entire project and give me an executive briefing in plain English:
+  1. What does this system do?
+  2. Who uses it and why does it matter to them?
+  3. What business problem does it solve?
+  4. How big and complex is it — roughly?
+Write your answer as if explaining to a hospital administrator who has never seen code.
+No technical jargon. Plain English only.
+Save your response as openmrs-workshop/01-EXECUTIVE-BRIEFING.md</div>
+
+    <div class="info-grid">
+      <div class="info-box expect">
+        <div class="info-title">What to expect</div>
+        <ul>
+          <li>Bob reads every file in 20–40 seconds</li>
+          <li>Identifies this as a healthcare scheduling system</li>
+          <li>Mentions patients, doctors, clinic slots, workflows</li>
+          <li>Gives a rough sense of scale</li>
+        </ul>
+      </div>
+      <div class="info-box good">
+        <div class="info-title">What good looks like</div>
+        <ul>
+          <li>A non-technical person can read it immediately</li>
+          <li>System purpose is clear and specific</li>
+          <li>Number of files and modules mentioned</li>
+        </ul>
+      </div>
+    </div>
+    <div class="reflection">If I had inherited this system yesterday, how long would it have taken me to reach this level of understanding — without Bob? A day? A week?</div>
+  </div>
+
+  <hr>
+
+  <!-- STEP 2 -->
+  <div class="ws-section">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div class="step-header-text">
+        <h2>Map the <strong>Structure</strong></h2>
+        <p>Understand how the system is organised internally — not just what it does</p>
+      </div>
+    </div>
+
+    <div class="why">Understanding structure is what allows you to make changes safely. If you don't know which part of a system does what, any change you make is a guess. Think of this like a floor plan — you can't safely renovate without one.</div>
+
+    <div class="prompt-label">📋 Prompt 2 — The Architecture Map</div>
+    <div class="prompt-box">Explain the architecture of this system to me.
+  1. What are the main structural layers — what is each one responsible for?
+  2. What are the key components and how do they connect?
+  3. Draw me a simple text diagram showing the overall structure.
+Explain everything in plain English.
+Use no Java terminology I won't understand.
+If you must use a technical term, explain it in brackets immediately after.
+Save your response as openmrs-workshop/02-ARCHITECTURE-MAP.md</div>
+
+    <div class="info-grid">
+      <div class="info-box expect">
+        <div class="info-title">What to expect</div>
+        <ul>
+          <li>A text diagram of the system structure</li>
+          <li>Web layer, service layer, data layer identified</li>
+          <li>Two modules (<code>api</code> and <code>omod</code>) explained</li>
+        </ul>
+      </div>
+      <div class="info-box good">
+        <div class="info-title">What good looks like</div>
+        <ul>
+          <li>Diagram is visually clear at a glance</li>
+          <li>Each layer explained by what it does — not how</li>
+          <li>No unexplained jargon remains</li>
+        </ul>
+      </div>
+    </div>
+    <div class="reflection">Does my own organisation have a document like this for its critical systems? If a new person joined tomorrow, could they get this level of understanding in under a minute?</div>
+  </div>
+
+  <hr>
+
+  <!-- STEP 3 -->
+  <div class="ws-section">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div class="step-header-text">
+        <h2>Find the <strong>Risks</strong></h2>
+        <p>Surface hidden problems — technical debt, outdated tech, incomplete work</p>
+      </div>
+    </div>
+
+    <div class="why">Every organisation has systems that carry hidden risk — technical debt that has never been catalogued, security gaps that have never been formally identified. Bob surfaces those risks automatically, in plain language, so decision-makers can act on them.</div>
+
+    <div class="prompt-label">📋 Prompt 3 — The Risk Assessment</div>
+    <div class="prompt-box">Review this entire codebase and give me a risk assessment.
+  1. What are the biggest technical risks — things that could cause problems in production?
+  2. What is unfinished or incomplete — work that was started but never completed?
+  3. Are there any security concerns — places where data could be exposed or misused?
+  4. Is the technology up to date, or are there components that are outdated or unsupported?
+Present your findings as a prioritised list — most important first.
+Explain each finding in plain English, including what the business impact would be
+if it is not addressed.
+Save your response as openmrs-workshop/03-RISK-ASSESSMENT.md</div>
+
+    <p style="color:var(--g70);font-size:13px;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px">Bob should find</p>
+    <div class="tags">
+      <span class="tag tag-red">Java 1.6 compiler target — end of life since 2006</span>
+      <span class="tag tag-red">Build pipeline running on Java 8 — also end of life</span>
+      <span class="tag tag-orange">TODO in AppointmentRequest.java — never completed</span>
+      <span class="tag tag-orange">TODO in PatientAppointment.java — never completed</span>
+      <span class="tag tag-orange">Core module importing a web component it should not</span>
+      <span class="tag tag-orange">No vulnerability scanning in the CI/CD pipeline</span>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-box expect">
+        <div class="info-title">What to expect</div>
+        <ul>
+          <li>Prioritised risk list, most critical first</li>
+          <li>TODO markers in source files flagged</li>
+          <li>Structural dependency violation identified</li>
+        </ul>
+      </div>
+      <div class="info-box good">
+        <div class="info-title">What good looks like</div>
+        <ul>
+          <li>Business impact stated for every finding</li>
+          <li>A non-technical manager can prioritise from this</li>
+          <li>Ranked from most to least serious</li>
+        </ul>
+      </div>
+    </div>
+    <div class="reflection">How long would it take a consultant to produce this risk assessment manually — and what would it cost? What risks might exist in my own organisation's systems that nobody has ever formally identified?</div>
+  </div>
+
+  <hr>
+
+  <!-- STEP 4 -->
+  <div class="ws-section">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div class="step-header-text">
+        <h2>Document <strong>Design Decisions</strong></h2>
+        <p>Record why the system was built the way it was — before someone forgets</p>
+      </div>
+    </div>
+
+    <div class="why">Every software system is built on decisions that were almost never written down. Future teams make changes that inadvertently break assumptions — because they didn't know the assumptions existed. Decision Records protect future teams from repeating past mistakes.</div>
+
+    <div class="prompt-label">📋 Prompt 4 — Capturing Key Decisions</div>
+    <div class="prompt-box">Read this codebase and identify the 3 most significant decisions
+that were made when it was built — decisions about how it is structured,
+what tools it uses, and why.
+
+For each decision, write a short Decision Record with these sections:
+  - Decision: what was decided (one sentence)
+  - Context: why this decision needed to be made
+  - Reasoning: why this option was chosen over alternatives
+  - Consequences: what this decision means for anyone who wants to change
+    the system in future
+
+Write each record in plain English. No technical jargon without explanation.
+Format each one clearly under a numbered heading.
+Save your response as openmrs-workshop/04-DESIGN-DECISIONS.md</div>
+
+    <div class="info-grid">
+      <div class="info-box expect">
+        <div class="info-title">What to expect</div>
+        <ul>
+          <li>3 structured Decision Records</li>
+          <li>Two-module split (<code>api</code> / <code>omod</code>) explained</li>
+          <li>Liquibase (database tracking tool) documented</li>
+          <li>Spring MVC (web framework) choice captured</li>
+        </ul>
+      </div>
+      <div class="info-box good">
+        <div class="info-title">What good looks like</div>
+        <ul>
+          <li>Plain language — anyone can read it</li>
+          <li>"Consequences" section tells future teams what to respect</li>
+          <li>A manager could read this and understand the system</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- STEP 5 -->
+  <div class="ws-section">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      <div class="step-header-text">
+        <h2>Assess <strong>Security</strong></h2>
+        <p>Conduct a structured security review — clear enough for non-technical decision-makers</p>
+      </div>
+    </div>
+
+    <div class="why">Security reviews are expensive. A professional security consultant charges thousands per day. Bob conducts a structured security review in minutes — producing findings clear enough for non-technical decision-makers to act on.</div>
+
+    <div class="prompt-label">📋 Prompt 5A — Focused Security Review</div>
+    <div class="prompt-box">Conduct a security-focused review of this codebase.
+
+Look specifically for:
+  1. Places where user input is accepted but not properly validated or sanitised
+     (sanitised means: checked to make sure it cannot be used to attack the system)
+  2. Any places where one part of the system is importing or using something
+     it should not have access to
+  3. Any incomplete security features — work that was started but not finished
+  4. Any missing security checks in the automated build process
+
+For each finding:
+  - Give it a severity rating: Critical, High, Medium, or Low
+  - Explain what the problem is in plain English
+  - Explain what could go wrong if it is not fixed
+  - Suggest what should be done about it
+Save your response as openmrs-workshop/05-SECURITY-REVIEW.md</div>
+
+    <p style="color:var(--g70);font-size:13px;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px">Expected findings</p>
+    <div class="tags">
+      <span class="tag tag-red">AppointmentRequest.java imports org.openmrs.web.WebUtil — structural violation</span>
+      <span class="tag tag-orange">Incomplete feature at AppointmentRequest.java line 42</span>
+      <span class="tag tag-orange">Only the notes field has HTML sanitisation — other fields do not</span>
+      <span class="tag tag-green">No OWASP vulnerability scan in .github/workflows/maven.yml</span>
+    </div>
+
+    <div class="divider-label">Also run</div>
+
+    <div class="prompt-label">📋 Prompt 5B — Performance Assessment</div>
+    <div class="prompt-box">Based on what you can read in this codebase, tell me how well this system
+is built to perform under real-world conditions.
+
+I want to understand:
+  - How fast does it appear to be designed to respond?
+  - How many users does it seem designed to handle at once?
+  - How resilient is it — what happens if something goes wrong?
+  - How easy is it to maintain and change — or is it fragile?
+  - Where does the code fall short of what a production system should be?
+
+Derive your answer entirely from what the code tells you — not from assumptions.
+Write your findings as a structured list.
+Flag clearly anywhere the system is not meeting the standards it should.
+Save your response as openmrs-workshop/05B-PERFORMANCE-REVIEW.md</div>
+
+    <div class="info-grid">
+      <div class="info-box expect">
+        <div class="info-title">What to expect</div>
+        <ul>
+          <li>No timeout or connection pool config found</li>
+          <li>No caching layer identified</li>
+          <li>Absence of explicit performance targets flagged as a gap</li>
+        </ul>
+      </div>
+      <div class="info-box good">
+        <div class="info-title">What good looks like</div>
+        <ul>
+          <li>Bob is honest about what the code doesn't say</li>
+          <li>Gaps are flagged as gaps — not glossed over</li>
+          <li>Output is actionable for a compliance or audit team</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- STEP 6 -->
+  <div class="ws-section">
+    <div class="step-header">
+      <div class="step-num">6</div>
+      <div class="step-header-text">
+        <h2>Plan the <strong>First Safe Change</strong></h2>
+        <p>Having understood, mapped, and documented the system — now we can plan</p>
+      </div>
+    </div>
+
+    <div class="why">This is the payoff. Every step before this was preparation. Teams that skip steps 1–5 and go straight to making changes are the ones who introduce bugs, break integrations, and create security vulnerabilities. The documentation produced in this workshop is the foundation that makes confident, safe change possible.</div>
+
+    <div class="prompt-label">📋 Prompt 6A — Plan a New Feature</div>
+    <div class="prompt-box">I want to add a patient waitlist feature to this appointment scheduling system.
+
+The feature should work as follows:
+- When all available time slots for a given appointment type are fully booked,
+  patients should be able to join a waitlist
+- When a cancellation occurs, the first patient on the waitlist should be
+  automatically offered the freed slot
+
+Using everything you know about this codebase from our earlier analysis:
+  1. What would need to be built — list the new components required
+  2. What existing parts of the system would be affected
+  3. What changes would need to be made to the database
+     (the permanent store of information)
+  4. What are the risks — what could go wrong if this is built incorrectly?
+  5. What would need to be tested to confirm the feature works correctly?
+
+Base your plan entirely on the actual structure of this codebase.
+Reference real component names where relevant.
+Write the plan clearly enough for a project manager to use it to scope the work.
+Save your response as openmrs-workshop/06-FEATURE-PLAN-WAITLIST.md</div>
+
+    <div class="divider-label">Then evaluate the approach</div>
+
+    <div class="prompt-label">📋 Prompt 6B — Evaluate Two Approaches</div>
+    <div class="prompt-box">For the patient waitlist feature, I am considering two different approaches:
+
+Option A: Create a brand new section in the database specifically for the waitlist,
+linked to the existing appointment data.
+
+Option B: Use a component that already exists in this system called AppointmentRequest,
+and add a new status called "WAITLISTED" to it.
+
+Evaluate both options against this specific codebase.
+  - What are the advantages and disadvantages of each?
+  - Which do you recommend and why?
+  - Are there any risks in the existing code I should know about before choosing?
+  - Be honest — if neither option is ideal, say so and explain why.
+Append your response to openmrs-workshop/06-FEATURE-PLAN-WAITLIST.md under a new heading "## Approach Evaluation"</div>
+
+    <div class="info-grid">
+      <div class="info-box expect">
+        <div class="info-title">What to expect</div>
+        <ul>
+          <li>Structured comparison of both options</li>
+          <li>Real component names referenced from the code</li>
+          <li>Clear recommendation with honest reasoning</li>
+        </ul>
+      </div>
+      <div class="info-box good">
+        <div class="info-title">What good looks like</div>
+        <ul>
+          <li>Decision-maker can approve a technical direction with confidence</li>
+          <li>Tradeoffs acknowledged — not glossed over</li>
+          <li>A PM can use this to estimate and schedule work</li>
+        </ul>
+      </div>
+    </div>
+    <div class="reflection">We have now produced: an executive briefing, an architecture map, a risk assessment, design decisions, a security review, and a feature plan — all from reading the code, not from guesswork. That is the discipline.</div>
+  </div>
+
+  <hr>
+
+  <!-- WRAP UP -->
+  <div class="ws-section">
+    <div class="principle">
+      <p><strong>"You cannot safely change what you do not understand."</strong></p>
+    </div>
+
+    <table>
+      <thead><tr><th>Step</th><th>What Bob produced</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td>1 — Executive Briefing</td><td>Plain-English system overview</td><td>Anyone in the organisation can understand what this system does</td></tr>
+        <tr><td>2 — Architecture Map</td><td>Structural diagram of the system</td><td>No change can be safely made without this</td></tr>
+        <tr><td>3 — Risk Assessment</td><td>Prioritised technical debt list</td><td>Decision-makers can act on real evidence</td></tr>
+        <tr><td>4 — Decision Records</td><td>Why the system was built this way</td><td>Future teams won't accidentally break past choices</td></tr>
+        <tr><td>5 — Security Review</td><td>Structured security findings</td><td>Compliance teams and auditors can work from real documentation</td></tr>
+        <tr><td>6 — Feature Plan</td><td>Grounded implementation plan</td><td>Development teams can work within the system's constraints</td></tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:16px;font-weight:400;color:var(--g90);margin-bottom:24px">The six steps in this workshop are not a checklist. They are a <strong>discipline</strong>. Teams that do this work before making changes ship faster, break less, and pass audits with confidence. Bob makes this discipline fast enough to be standard practice on every project.</p>
+
+    <div class="divider-label">Your next step</div>
+    <p style="color:var(--g70);margin-bottom:20px">Think of one system in your organisation that you would most want to run through this process.</p>
+
+    <div class="next-grid">
+      <div class="next-card"><div class="nc-label">Question 1</div><p>What is the system — and what does it do?</p></div>
+      <div class="next-card"><div class="nc-label">Question 2</div><p>Who currently understands it — and what would happen if they left?</p></div>
+      <div class="next-card"><div class="nc-label">Question 3</div><p>What changes are planned for it in the next 12 months?</p></div>
+      <div class="next-card"><div class="nc-label">Question 4</div><p>What documentation exists today — honestly?</p></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Made with IBM Bob</footer>
+
+</body>
+</html>
